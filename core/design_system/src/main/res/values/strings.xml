@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common Strings -->
+    <string name="app_name">SuperHero Archive</string>
+    <string name="back">Back</string>
+
+    <!-- Tags (Shared) -->
+    <string name="tag_hero">HERO</string>
+    <string name="tag_villain">VILLAIN</string>
+
+    <!-- Power Stats names (Shared) -->
+    <string name="stat_strength">STRENGTH</string>
+    <string name="stat_intelligence">INTELLIGENCE</string>
+    <string name="stat_speed">SPEED</string>
+    <string name="stat_durability">DURABILITY</string>
+    <string name="stat_power">POWER</string>
+    <string name="stat_combat">COMBAT</string>
+
+    <!-- Errors / Alerts (Shared) -->
+    <string name="error_loading">Failed to load data. Please try again.</string>
+    <string name="retry">Retry</string>
+</resources>
