@@ -5,33 +5,35 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
-import com.anenha.superhero.core.designsystem.theme.SurfaceColor
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @Composable
 fun VanguardCard(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 16.dp,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     borderWidth: Dp = 1.dp,
-    borderColor: Color = Color.White.copy(alpha = 0.1f),
-    backgroundColor: Color = SurfaceColor.copy(alpha = 0.7f),
+    borderColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(cornerRadius))
+            .fillMaxWidth()
+            .clip(shape)
             .background(backgroundColor)
-            .border(borderWidth, borderColor, RoundedCornerShape(cornerRadius))
+            .border(borderWidth, borderColor, shape)
             .padding(16.dp)
     ) {
         Column {
@@ -43,9 +45,9 @@ fun VanguardCard(
 @Preview
 @Composable
 private fun VanguardCardPreview() {
-    SuperheroTheme {
+    VanguardKineticTheme {
         VanguardCard {
-            Text(text = "Card Content", color = Color.White)
+            Text(text = "Card Content", color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

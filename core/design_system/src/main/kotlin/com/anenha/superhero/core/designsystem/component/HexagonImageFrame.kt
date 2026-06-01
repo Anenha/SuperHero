@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.GenericShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,9 +16,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.anenha.superhero.core.designsystem.theme.PrimaryColor
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
-import com.anenha.superhero.core.designsystem.theme.SurfaceContainerLowestColor
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 val HexagonShape = GenericShape { size, _ ->
     val width = size.width
@@ -46,7 +45,7 @@ fun HexagonImageFrame(
         modifier = modifier
             .aspectRatio(1f)
             .clip(HexagonShape)
-            .background(SurfaceContainerLowestColor)
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
             .drawWithContent {
                 drawContent()
                 val path = Path().apply {
@@ -78,9 +77,9 @@ fun HexagonImageFrame(
 @Preview
 @Composable
 private fun HexagonImageFramePreview() {
-    SuperheroTheme {
+    VanguardKineticTheme {
         HexagonImageFrame(
-            borderColor = PrimaryColor,
+            borderColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(100.dp)
         ) {
             // Placeholder content

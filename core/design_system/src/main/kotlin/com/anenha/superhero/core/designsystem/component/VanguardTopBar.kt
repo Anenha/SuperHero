@@ -5,14 +5,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import com.anenha.superhero.core.designsystem.R
-import com.anenha.superhero.core.designsystem.theme.BackgroundColor
-import com.anenha.superhero.core.designsystem.theme.LabelCaps
-import com.anenha.superhero.core.designsystem.theme.PrimaryColor
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,11 +19,8 @@ fun VanguardTopBar(
         title = {
             Text(
                 text = title,
-                style = LabelCaps.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = PrimaryColor
-                )
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
             )
         },
         navigationIcon = {
@@ -37,14 +29,14 @@ fun VanguardTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back),
-                        tint = PrimaryColor
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = BackgroundColor,
-            titleContentColor = PrimaryColor
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -52,7 +44,7 @@ fun VanguardTopBar(
 @Preview
 @Composable
 private fun VanguardTopBarPreview() {
-    SuperheroTheme {
+    VanguardKineticTheme {
         VanguardTopBar(title = "ARCHIVE", onBackClick = {})
     }
 }

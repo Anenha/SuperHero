@@ -2,15 +2,14 @@ package com.anenha.superhero.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anenha.superhero.core.designsystem.theme.PrimaryColor
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @Composable
 fun SegmentedPowerBar(
@@ -31,7 +30,7 @@ fun SegmentedPowerBar(
                 modifier = Modifier
                     .weight(1f)
                     .height(8.dp)
-                    .clip(RoundedCornerShape(2.dp))
+                    .clip(MaterialTheme.shapes.extraSmall)
                     .background(segmentColor)
             )
         }
@@ -41,7 +40,7 @@ fun SegmentedPowerBar(
 @Preview
 @Composable
 private fun SegmentedPowerBarPreview() {
-    SuperheroTheme {
-        SegmentedPowerBar(value = 75, color = PrimaryColor)
+    VanguardKineticTheme {
+        SegmentedPowerBar(value = 75, color = MaterialTheme.colorScheme.primary)
     }
 }

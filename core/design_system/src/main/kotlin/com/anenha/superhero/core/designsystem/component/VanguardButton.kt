@@ -1,10 +1,10 @@
 package com.anenha.superhero.core.designsystem.component
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,10 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.anenha.superhero.core.designsystem.theme.LabelCaps
-import com.anenha.superhero.core.designsystem.theme.PrimaryColor
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @Composable
 fun VanguardButton(
@@ -24,7 +21,7 @@ fun VanguardButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
-    color: Color = PrimaryColor,
+    color: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = Color.White
 ) {
     Button(
@@ -33,7 +30,7 @@ fun VanguardButton(
             containerColor = color,
             contentColor = contentColor
         ),
-        shape = RoundedCornerShape(8.dp),
+        shape = MaterialTheme.shapes.small,
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp)
@@ -48,10 +45,8 @@ fun VanguardButton(
             }
             Text(
                 text = text,
-                style = LabelCaps.copy(
-                    fontSize = 14.sp,
-                    color = contentColor
-                )
+                style = MaterialTheme.typography.labelLarge,
+                color = contentColor
             )
         }
     }
@@ -60,7 +55,7 @@ fun VanguardButton(
 @Preview
 @Composable
 private fun VanguardButtonPreview() {
-    SuperheroTheme {
+    VanguardKineticTheme {
         VanguardButton(text = "ASSEMBLE", onClick = {})
     }
 }

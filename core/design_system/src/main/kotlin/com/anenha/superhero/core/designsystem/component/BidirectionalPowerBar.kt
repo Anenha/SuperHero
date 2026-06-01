@@ -2,25 +2,24 @@ package com.anenha.superhero.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anenha.superhero.core.designsystem.theme.PrimaryColor
-import com.anenha.superhero.core.designsystem.theme.SecondaryColor
-import com.anenha.superhero.core.designsystem.theme.SuperheroTheme
+import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @Composable
 fun BidirectionalPowerBar(
     leftValue: Int, // 0 to 100
     rightValue: Int, // 0 to 100
     modifier: Modifier = Modifier,
-    leftColor: Color = PrimaryColor,
-    rightColor: Color = SecondaryColor,
+    leftColor: Color = MaterialTheme.colorScheme.primary,
+    rightColor: Color = MaterialTheme.colorScheme.secondary,
 ) {
     val leftFilled = (leftValue / 20).coerceIn(0, 5)
     val rightFilled = (rightValue / 20).coerceIn(0, 5)
@@ -40,7 +39,7 @@ fun BidirectionalPowerBar(
                     modifier = Modifier
                         .width(20.dp)
                         .height(8.dp)
-                        .clip(RoundedCornerShape(2.dp))
+                        .clip(MaterialTheme.shapes.extraSmall)
                         .background(segmentColor)
                 )
             }
@@ -59,7 +58,7 @@ fun BidirectionalPowerBar(
                     modifier = Modifier
                         .width(20.dp)
                         .height(8.dp)
-                        .clip(RoundedCornerShape(2.dp))
+                        .clip(MaterialTheme.shapes.extraSmall)
                         .background(segmentColor)
                 )
             }
@@ -70,7 +69,7 @@ fun BidirectionalPowerBar(
 @Preview
 @Composable
 private fun BidirectionalPowerBarPreview() {
-    SuperheroTheme {
+    VanguardKineticTheme {
         BidirectionalPowerBar(leftValue = 60, rightValue = 80)
     }
 }
