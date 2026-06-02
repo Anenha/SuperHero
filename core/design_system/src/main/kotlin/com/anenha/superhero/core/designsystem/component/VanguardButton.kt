@@ -20,11 +20,13 @@ fun VanguardButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isEnable: Boolean = true,
     icon: ImageVector? = null,
     color: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = Color.White
 ) {
     Button(
+        enabled = isEnable,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
