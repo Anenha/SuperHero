@@ -41,7 +41,7 @@ fun VanguardSearchBar(
     placeholder: String,
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector = Icons.Default.Search,
-    glowColor: Color = MaterialTheme.colorScheme.primary
+    glowColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -80,26 +80,26 @@ fun VanguardSearchBar(
             .height(56.dp)
             .clip(MaterialTheme.shapes.small)
             .background(MaterialTheme.colorScheme.surfaceContainer)
-            .border(1.dp, animatedBorderColor, MaterialTheme.shapes.small)
-            .drawWithContent {
-                if (animatedGlowAlpha > 0f) {
-                    val shadowColor = glowColor.copy(alpha = animatedGlowAlpha)
-                    val paint = Paint().asFrameworkPaint().apply {
-                        color = shadowColor.toArgb()
-                        setShadowLayer(
-                            animatedElevation.toPx() * 3,
-                            0f, 0f,
-                            shadowColor.toArgb()
-                        )
-                    }
-                    drawContext.canvas.nativeCanvas.drawRoundRect(
-                        0f, 0f, size.width, size.height,
-                        8.dp.toPx(), 8.dp.toPx(),
-                        paint
-                    )
-                }
-                drawContent()
-            },
+            .border(1.dp, animatedBorderColor, MaterialTheme.shapes.small),
+//            .drawWithContent {
+//                if (animatedGlowAlpha > 0f) {
+//                    val shadowColor = glowColor.copy(alpha = animatedGlowAlpha)
+//                    val paint = Paint().asFrameworkPaint().apply {
+//                        color = shadowColor.toArgb()
+//                        setShadowLayer(
+//                            animatedElevation.toPx() * 3,
+//                            0f, 0f,
+//                            shadowColor.toArgb()
+//                        )
+//                    }
+//                    drawContext.canvas.nativeCanvas.drawRoundRect(
+//                        0f, 0f, size.width, size.height,
+//                        8.dp.toPx(), 8.dp.toPx(),
+//                        paint
+//                    )
+//                }
+//                drawContent()
+//            },
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
