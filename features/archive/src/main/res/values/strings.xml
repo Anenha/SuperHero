@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Archive Screen -->
+    <string name="archive_title">ARCHIVE</string>
+    <string name="archive_subtitle">Access the world\'s most comprehensive database of extraordinary individuals. Power metrics, and historical logs are now decrypted.</string>
+    <string name="search_placeholder">Search by name</string>
+    <string name="no_records_found">No records found</string>
+
+    <!-- Tags -->
+    <string name="tag_neutral">NEUTRAL</string>
+
+    <!-- Details Screen -->
+    <string name="details_title">HERO DETAILS</string>
+    <string name="details_title_villain">VILLAIN DETAILS</string>
+
+    <!-- Sections -->
+    <string name="section_power_stats">POWER STATS</string>
+    <string name="section_compare">COMPARE</string>
+    <string name="section_appearance">APPEARANCE</string>
+    <string name="section_biography">BIOGRAPHY</string>
+    <string name="section_work">WORK</string>
+    <string name="section_affiliations">AFFILIATIONS</string>
+    <string name="section_relatives">RELATIVES</string>
+
+    <!-- Compare Subsection -->
+    <string name="compare_with_label">COMPARE WITH</string>
+    <string name="compare_search_placeholder">Search hero name...</string>
+    <string name="compare_button_text">COMPARE</string>
+
+    <!-- Appearance Fields -->
+    <string name="field_gender">GENDER</string>
+    <string name="field_race">RACE</string>
+    <string name="field_height">HEIGHT</string>
+    <string name="field_weight">WEIGHT</string>
+    <string name="field_eye_color">EYE COLOR</string>
+    <string name="field_hair_color">HAIR COLOR</string>
+
+    <!-- Biography Fields -->
+    <string name="field_aliases">ALIASES</string>
+    <string name="field_alter_egos">ALTER EGOS</string>
+    <string name="field_place_of_birth">PLACE OF BIRTH</string>
+    <string name="field_first_appearance">FIRST APPEARANCE</string>
+    <string name="field_publisher">PUBLISHER</string>
+    <string name="field_alignment">ALIGNMENT</string>
+
+    <!-- Work Fields -->
+    <string name="field_occupation">OCCUPATION</string>
+    <string name="field_base">BASE</string>
+
+    <string name="unknown">Unknown</string>
+</resources>
