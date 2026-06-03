@@ -2,8 +2,8 @@ package com.anenha.superhero.core.network.di
 
 import com.anenha.superhero.core.network.BuildConfig
 import com.anenha.superhero.core.network.interceptor.SanitizeJsonInterceptor
-import com.anenha.superhero.core.network.SuperHeroRepositoryImpl
-import com.anenha.superhero.core.network.SuperHeroService
+import com.anenha.superhero.core.network.repository.SuperHeroRepositoryImpl
+import com.anenha.superhero.core.network.service.SuperHeroService
 import com.anenha.superhero.domain.repository.SuperHeroRepository
 import dagger.Binds
 import dagger.Module
