@@ -24,8 +24,8 @@ fun SectionHeader(
     ) {
         Box(
             modifier = Modifier
-                .width(4.dp)
-                .height(18.dp)
+                .width(18.dp)
+                .height(4.dp)
                 .background(barColor)
         )
         Spacer(modifier = Modifier.width(12.dp))
