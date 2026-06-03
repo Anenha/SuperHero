@@ -1,4 +1,4 @@
-package com.anenha.superhero.core.network
+package com.anenha.superhero.core.network.service
 
 import com.anenha.superhero.core.network.model.SearchResponseDto
 import com.anenha.superhero.core.network.model.SuperHeroDto

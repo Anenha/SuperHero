@@ -37,7 +37,7 @@ fun AffiliationsSection(
     }
 }
 
-@Preview(name = "Affiliations Section", showBackground = true)
+@Preview(name = "Affiliations Section")
 @Composable
 private fun AffiliationsSectionPreview() {
     VanguardKineticTheme {
