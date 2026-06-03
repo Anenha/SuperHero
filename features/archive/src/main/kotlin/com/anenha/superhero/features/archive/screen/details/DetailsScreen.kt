@@ -318,7 +318,7 @@ private fun createMockHero(id: String, name: String, alignment: String): SuperHe
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview(name = "Details - Loading State", showBackground = true)
+@Preview(name = "Details - Loading State")
 @Composable
 private fun DetailsScreenContentLoadingPreview() {
     VanguardKineticTheme {
@@ -342,7 +342,7 @@ private fun DetailsScreenContentLoadingPreview() {
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview(name = "Details - Success State", showBackground = true)
+@Preview(name = "Details - Success State")
 @Composable
 private fun DetailsScreenContentSuccessPreview() {
     val mockHero = createMockHero("1", "Batman", "good")
@@ -367,7 +367,7 @@ private fun DetailsScreenContentSuccessPreview() {
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
-@Preview(name = "Details - Error State", showBackground = true)
+@Preview(name = "Details - Error State")
 @Composable
 private fun DetailsScreenContentErrorPreview() {
     VanguardKineticTheme {

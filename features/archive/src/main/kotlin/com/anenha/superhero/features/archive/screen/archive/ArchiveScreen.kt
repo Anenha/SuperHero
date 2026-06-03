@@ -248,7 +248,7 @@ private fun createMockHero(id: String, name: String, alignment: String): SuperHe
     )
 }
 
-@Preview(name = "Archive - Loading State", showBackground = true)
+@Preview(name = "Archive - Loading State")
 @Composable
 private fun ArchiveScreenContentLoadingPreview() {
     VanguardKineticTheme {
@@ -268,7 +268,7 @@ private fun ArchiveScreenContentLoadingPreview() {
     }
 }
 
-@Preview(name = "Archive - Success State (Empty)", showBackground = true)
+@Preview(name = "Archive - Success State (Empty)")
 @Composable
 private fun ArchiveScreenContentEmptyPreview() {
     VanguardKineticTheme {
@@ -288,7 +288,7 @@ private fun ArchiveScreenContentEmptyPreview() {
     }
 }
 
-@Preview(name = "Archive - Success State (Heroes)", showBackground = true)
+@Preview(name = "Archive - Success State (Heroes)")
 @Composable
 private fun ArchiveScreenContentSuccessPreview() {
     val mockHeroes = listOf(
@@ -313,7 +313,7 @@ private fun ArchiveScreenContentSuccessPreview() {
     }
 }
 
-@Preview(name = "Archive - Error State", showBackground = true)
+@Preview(name = "Archive - Error State")
 @Composable
 private fun ArchiveScreenContentErrorPreview() {
     VanguardKineticTheme {

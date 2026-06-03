@@ -88,7 +88,7 @@ private fun GridAttributes(items: List<Pair<String, String>>) {
     }
 }
 
-@Preview(name = "Appearance Section", showBackground = true)
+@Preview(name = "Appearance Section")
 @Composable
 private fun AppearanceSectionPreview() {
     VanguardKineticTheme {

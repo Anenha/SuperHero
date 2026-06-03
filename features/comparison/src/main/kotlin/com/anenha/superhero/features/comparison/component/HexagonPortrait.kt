@@ -102,7 +102,7 @@ private fun createMockHero(id: String, name: String, isVillain: Boolean): SuperH
     )
 }
 
-@Preview(name = "Hexagon Portrait - Hero", showBackground = true)
+@Preview(name = "Hexagon Portrait - Hero")
 @Composable
 private fun HeroHexagonPortraitPreview() {
     val mockHero = createMockHero("1", "Batman", false)
@@ -114,7 +114,7 @@ private fun HeroHexagonPortraitPreview() {
     }
 }
 
-@Preview(name = "Hexagon Portrait - Villain", showBackground = true)
+@Preview(name = "Hexagon Portrait - Villain")
 @Composable
 private fun VillainHexagonPortraitPreview() {
     val mockVillain = createMockHero("2", "Joker", true)

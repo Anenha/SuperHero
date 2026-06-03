@@ -169,7 +169,7 @@ private fun createMockHero(id: String, name: String, alignment: String): SuperHe
     )
 }
 
-@Preview(name = "Hero Card - Good Alignment", showBackground = true)
+@Preview(name = "Hero Card - Good Alignment")
 @Composable
 private fun HeroCardGoodPreview() {
     VanguardKineticTheme {
@@ -187,7 +187,7 @@ private fun HeroCardGoodPreview() {
     }
 }
 
-@Preview(name = "Hero Card - Bad Alignment", showBackground = true)
+@Preview(name = "Hero Card - Bad Alignment")
 @Composable
 private fun HeroCardBadPreview() {
     VanguardKineticTheme {
@@ -205,7 +205,7 @@ private fun HeroCardBadPreview() {
     }
 }
 
-@Preview(name = "Hero Card - Neutral Alignment", showBackground = true)
+@Preview(name = "Hero Card - Neutral Alignment")
 @Composable
 private fun HeroCardNeutralPreview() {
     VanguardKineticTheme {

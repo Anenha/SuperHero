@@ -66,7 +66,7 @@ private fun KeyValueColumn(items: List<Pair<String, String>>) {
     }
 }
 
-@Preview(name = "Biography Section", showBackground = true)
+@Preview(name = "Biography Section")
 @Composable
 private fun BiographySectionPreview() {
     VanguardKineticTheme {

@@ -195,7 +195,7 @@ private fun createMockHero(id: String, name: String): SuperHero {
     )
 }
 
-@Preview(name = "Compare Section - Idle", showBackground = true)
+@Preview(name = "Compare Section - Idle")
 @Composable
 private fun CompareSectionIdlePreview() {
     VanguardKineticTheme {
@@ -211,7 +211,7 @@ private fun CompareSectionIdlePreview() {
     }
 }
 
-@Preview(name = "Compare Section - Loading Search Results", showBackground = true)
+@Preview(name = "Compare Section - Loading Search Results")
 @Composable
 private fun CompareSectionLoadingPreview() {
     VanguardKineticTheme {
@@ -227,7 +227,7 @@ private fun CompareSectionLoadingPreview() {
     }
 }
 
-@Preview(name = "Compare Section - With Results", showBackground = true)
+@Preview(name = "Compare Section - With Results")
 @Composable
 private fun CompareSectionResultsPreview() {
     val results = listOf(

@@ -37,7 +37,7 @@ fun RelativesSection(
     }
 }
 
-@Preview(name = "Relatives Section", showBackground = true)
+@Preview(name = "Relatives Section")
 @Composable
 private fun RelativesSectionPreview() {
     VanguardKineticTheme {

@@ -99,7 +99,7 @@ private fun StatRow(
     }
 }
 
-@Preview(name = "Power Stats Section", showBackground = true)
+@Preview(name = "Power Stats Section")
 @Composable
 private fun PowerStatsSectionPreview() {
     VanguardKineticTheme {

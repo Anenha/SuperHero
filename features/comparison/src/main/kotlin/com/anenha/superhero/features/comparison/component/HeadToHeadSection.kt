@@ -87,7 +87,7 @@ private fun CompareStatRow(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Left stat value (purple)
+            // Left stat value
             Text(
                 text = leftVal.toString(),
                 style = MaterialTheme.typography.displayMedium.copy(fontSize = 24.sp),
@@ -100,12 +100,12 @@ private fun CompareStatRow(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.inverseOnSurface,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.weight(2f),
                 textAlign = TextAlign.Center
             )
 
-            // Right stat value (cyan)
+            // Right stat value
             Text(
                 text = rightVal.toString(),
                 style = MaterialTheme.typography.displayMedium.copy(fontSize = 24.sp),
@@ -115,8 +115,7 @@ private fun CompareStatRow(
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Bidirectional progress bar
+        
         BidirectionalPowerBar(
             leftValue = leftVal,
             rightValue = rightVal,
@@ -161,7 +160,7 @@ private fun createMockHero(id: String, name: String, isVillain: Boolean): SuperH
     )
 }
 
-@Preview(name = "Head to Head Section Preview", showBackground = true)
+@Preview(name = "Head to Head Section Preview")
 @Composable
 private fun HeadToHeadSectionPreview() {
     val hero1 = createMockHero("1", "Batman", false)

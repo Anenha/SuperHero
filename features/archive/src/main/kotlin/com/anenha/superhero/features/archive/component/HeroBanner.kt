@@ -94,7 +94,7 @@ fun HeroBanner(
     }
 }
 
-@Preview(name = "Hero Banner Preview", showBackground = true)
+@Preview(name = "Hero Banner Preview")
 @Composable
 private fun HeroBannerPreview() {
     VanguardKineticTheme {
