@@ -27,7 +27,7 @@ import com.anenha.superhero.core.designsystem.R as DesignSystemR
 
 @Composable
 fun PowerStatsSection(
-    powerstats: PowerStats,
+    powerStats: PowerStats,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -39,35 +39,44 @@ fun PowerStatsSection(
         VanguardCard {
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_strength),
-                value = powerstats.strength,
-                color = MaterialTheme.colorScheme.primary
+                value = powerStats.strength,
+                color = getStatColor(powerStats.strength)
             )
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_intelligence),
-                value = powerstats.intelligence,
-                color = MaterialTheme.colorScheme.tertiary
+                value = powerStats.intelligence,
+                color = getStatColor(powerStats.intelligence)
             )
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_speed),
-                value = powerstats.speed,
-                color = MaterialTheme.colorScheme.secondary
+                value = powerStats.speed,
+                color = getStatColor(powerStats.speed)
             )
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_durability),
-                value = powerstats.durability,
-                color = MaterialTheme.colorScheme.secondary
+                value = powerStats.durability,
+                color = getStatColor(powerStats.durability)
             )
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_power),
-                value = powerstats.power,
-                color = MaterialTheme.colorScheme.primary
+                value = powerStats.power,
+                color = getStatColor(powerStats.power)
             )
             StatRow(
                 label = stringResource(id = DesignSystemR.string.stat_combat),
-                value = powerstats.combat,
-                color = MaterialTheme.colorScheme.tertiary
+                value = powerStats.combat,
+                color = getStatColor(powerStats.combat)
             )
         }
+    }
+}
+
+@Composable
+private fun getStatColor(value: Int): Color {
+    return when (value) {
+        in 0..33 -> MaterialTheme.colorScheme.secondary
+        in 34..66 -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.tertiary
     }
 }
 
@@ -104,13 +113,13 @@ private fun StatRow(
 private fun PowerStatsSectionPreview() {
     VanguardKineticTheme {
         PowerStatsSection(
-            powerstats = PowerStats(
+            powerStats = PowerStats(
                 intelligence = 92,
-                strength = 80,
-                speed = 75,
+                strength = 60,
+                speed = 55,
                 durability = 85,
-                power = 95,
-                combat = 88
+                power = 30,
+                combat = 22
             ),
             modifier = Modifier.padding(16.dp)
         )
