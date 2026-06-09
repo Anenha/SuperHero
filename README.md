@@ -10,7 +10,7 @@ A modern Android application that catalogs, details, and compares superheroes fr
 
 ## 📱 App Demo
 
-<video src="assets/super-hero-app.mp4" width="100%" controls></video>
+[super-hero-app.webm](https://github.com/user-attachments/assets/7783732a-df08-4624-a9d4-2d99f73280ea)
 
 ---
 
