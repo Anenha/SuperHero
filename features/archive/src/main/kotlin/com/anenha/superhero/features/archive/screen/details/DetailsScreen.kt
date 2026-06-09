@@ -1,18 +1,20 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.anenha.superhero.features.archive.screen.details
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -27,19 +29,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anenha.superhero.core.designsystem.component.VanguardCircularProgressIndicator
 import com.anenha.superhero.core.designsystem.component.VanguardLargeTopBar
-import com.anenha.superhero.core.designsystem.component.VanguardTopBar
 import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 import com.anenha.superhero.domain.model.Appearance
 import com.anenha.superhero.domain.model.Biography
@@ -58,22 +60,32 @@ import com.anenha.superhero.features.archive.component.RelativesSection
 import com.anenha.superhero.features.archive.component.WorkSection
 import com.anenha.superhero.core.designsystem.R as DesignSystemR
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
-    viewModel: DetailsViewModel,
+    heroId: String,
+    heroName: String?,
+    heroImageUrl: String?,
     onBackClick: () -> Unit,
     onCompareClick: (String, String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val compareQuery by viewModel.compareQuery.collectAsState()
-    val dropdownResults by viewModel.dropdownResults.collectAsState()
-    val isDropdownLoading by viewModel.isDropdownLoading.collectAsState()
+    val viewModel: DetailsViewModel = hiltViewModel(
+        key = heroId,
+        creationCallback = { factory: DetailsViewModel.Factory ->
+            factory.create(heroId)
+        }
+    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val compareQuery by viewModel.compareQuery.collectAsStateWithLifecycle()
+    val dropdownResults by viewModel.dropdownResults.collectAsStateWithLifecycle()
+    val isDropdownLoading by viewModel.isDropdownLoading.collectAsStateWithLifecycle()
 
     DetailsScreenContent(
+        heroId = heroId,
+        heroName = heroName,
+        heroImageUrl = heroImageUrl,
         uiState = uiState,
         compareQuery = compareQuery,
         dropdownResults = dropdownResults,
@@ -93,9 +105,11 @@ fun DetailsScreen(
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreenContent(
+    heroId: String,
+    heroName: String?,
+    heroImageUrl: String?,
     uiState: DetailsUiState,
     compareQuery: String,
     dropdownResults: List<SuperHero>,
@@ -108,89 +122,96 @@ fun DetailsScreenContent(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    when (val state = uiState) {
-        is DetailsUiState.Success -> {
-            val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-            Scaffold(
-                topBar = {
-                    VanguardLargeTopBar(
-                        title = state.hero.name,
-                        onBackClick = onBackClick,
-                        scrollBehavior = scrollBehavior,
-                        expandedHeight = 380.dp,
-                        windowInsets = WindowInsets.statusBars,
-                        background = {
-                            HeroBanner(
-                                heroId = state.hero.id,
-                                heroName = state.hero.name,
-                                imageUrl = state.hero.imageUrl,
-                                sharedTransitionScope = sharedTransitionScope,
-                                animatedVisibilityScope = animatedVisibilityScope,
-                                showName = false,
-                                modifier = Modifier
-                                    .matchParentSize()
-                                    .graphicsLayer {
-                                        alpha = 1f - scrollBehavior.state.collapsedFraction
-                                    }
-                            )
-                        }
-                    )
-                },
-                contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                modifier = modifier
-                    .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-            ) { innerPadding ->
-                DetailsSuccessContent(
-                    hero = state.hero,
-                    compareQuery = compareQuery,
-                    dropdownResults = dropdownResults,
-                    isDropdownLoading = isDropdownLoading,
-                    onCompareQueryChange = onCompareQueryChange,
-                    onCompareClick = onCompareClick,
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .navigationBarsPadding()
-                )
-            }
-        }
-        else -> {
-            Scaffold(
-                topBar = {
-                    VanguardTopBar(
-                        title = stringResource(
-                            id = when (uiState) {
-                                is DetailsUiState.Error -> R.string.details_title // Or some default
-                                else -> R.string.details_title
+    val successState = uiState as? DetailsUiState.Success
+    val displayName =
+        successState?.hero?.name ?: heroName ?: stringResource(id = R.string.details_title)
+    val displayImageUrl = successState?.hero?.imageUrl ?: heroImageUrl ?: ""
+
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    Scaffold(
+        topBar = {
+            VanguardLargeTopBar(
+                title = displayName,
+                onBackClick = onBackClick,
+                scrollBehavior = scrollBehavior,
+                expandedHeight = 380.dp,
+                windowInsets = WindowInsets.statusBars,
+                modifier = with(sharedTransitionScope) {
+                    Modifier.sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "hero_name_${heroId}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = remember {
+                            BoundsTransform { _, _ ->
+                                spring(
+                                    dampingRatio = 0.8f,
+                                    stiffness = 380f
+                                )
                             }
-                        ),
-                        onBackClick = onBackClick
+                        },
+                        resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
                     )
                 },
-                modifier = modifier.fillMaxSize()
-            ) { innerPadding ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    if (uiState is DetailsUiState.Loading) {
-                        VanguardCircularProgressIndicator(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else if (uiState is DetailsUiState.Error) {
-                        DetailsErrorContent(
-                            message = uiState.message,
-                            onRetry = onRetry
-                        )
-                    }
+                background = {
+                    HeroBanner(
+                        heroId = heroId,
+                        heroName = displayName,
+                        imageUrl = displayImageUrl,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        showName = false,
+                        modifier = Modifier
+                            .matchParentSize()
+                            .graphicsLayer {
+                                alpha = 1f - scrollBehavior.state.collapsedFraction
+                            }
+                    )
+                }
+            )
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        modifier = modifier
+            .fillMaxSize()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when (uiState) {
+                is DetailsUiState.Loading -> {
+                    VanguardCircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                is DetailsUiState.Success -> {
+                    DetailsSuccessContent(
+                        hero = uiState.hero,
+                        compareQuery = compareQuery,
+                        dropdownResults = dropdownResults,
+                        isDropdownLoading = isDropdownLoading,
+                        onCompareQueryChange = onCompareQueryChange,
+                        onCompareClick = onCompareClick,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .navigationBarsPadding()
+                    )
+                }
+
+                is DetailsUiState.Error -> {
+                    DetailsErrorContent(
+                        message = uiState.message,
+                        onRetry = onRetry,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun DetailsSuccessContent(
     hero: SuperHero,
@@ -205,49 +226,43 @@ private fun DetailsSuccessContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .padding(20.dp)
     ) {
-            // Scrollable attributes
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            ) {
-                PowerStatsSection(powerstats = hero.powerstats)
+        PowerStatsSection(powerStats = hero.powerstats)
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                CompareSection(
-                    currentHeroId = hero.id,
-                    compareQuery = compareQuery,
-                    dropdownResults = dropdownResults,
-                    isDropdownLoading = isDropdownLoading,
-                    onCompareQueryChange = onCompareQueryChange,
-                    onCompareClick = onCompareClick
-                )
+        CompareSection(
+            currentHeroId = hero.id,
+            compareQuery = compareQuery,
+            dropdownResults = dropdownResults,
+            isDropdownLoading = isDropdownLoading,
+            onCompareQueryChange = onCompareQueryChange,
+            onCompareClick = onCompareClick
+        )
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                AppearanceSection(appearance = hero.appearance)
+        AppearanceSection(appearance = hero.appearance)
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                BiographySection(biography = hero.biography)
+        BiographySection(biography = hero.biography)
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                WorkSection(work = hero.work)
+        WorkSection(work = hero.work)
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                AffiliationsSection(groupAffiliation = hero.connections.groupAffiliation)
+        AffiliationsSection(groupAffiliation = hero.connections.groupAffiliation)
 
-                Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-                RelativesSection(relatives = hero.connections.relatives)
+        RelativesSection(relatives = hero.connections.relatives)
 
-                Spacer(modifier = Modifier.height(40.dp))
-            }
-        }
+        Spacer(modifier = Modifier.height(40.dp))
+    }
 }
 
 @Composable
@@ -256,28 +271,27 @@ private fun DetailsErrorContent(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.tertiary
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onRetry,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.tertiary
+                text = stringResource(id = DesignSystemR.string.retry),
+                style = MaterialTheme.typography.labelMedium
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onRetry,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = stringResource(id = DesignSystemR.string.retry),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 }
@@ -317,7 +331,6 @@ private fun createMockHero(id: String, name: String, alignment: String): SuperHe
     )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Preview(name = "Details - Loading State")
 @Composable
 private fun DetailsScreenContentLoadingPreview() {
@@ -325,6 +338,9 @@ private fun DetailsScreenContentLoadingPreview() {
         SharedTransitionLayout {
             AnimatedVisibility(visible = true) {
                 DetailsScreenContent(
+                    heroId = "1",
+                    heroName = "Batman",
+                    heroImageUrl = "",
                     uiState = DetailsUiState.Loading,
                     compareQuery = "",
                     dropdownResults = emptyList(),
@@ -341,7 +357,6 @@ private fun DetailsScreenContentLoadingPreview() {
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Preview(name = "Details - Success State")
 @Composable
 private fun DetailsScreenContentSuccessPreview() {
@@ -350,6 +365,9 @@ private fun DetailsScreenContentSuccessPreview() {
         SharedTransitionLayout {
             AnimatedVisibility(visible = true) {
                 DetailsScreenContent(
+                    heroId = mockHero.id,
+                    heroName = mockHero.name,
+                    heroImageUrl = mockHero.imageUrl,
                     uiState = DetailsUiState.Success(mockHero),
                     compareQuery = "",
                     dropdownResults = emptyList(),
@@ -366,7 +384,6 @@ private fun DetailsScreenContentSuccessPreview() {
     }
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Preview(name = "Details - Error State")
 @Composable
 private fun DetailsScreenContentErrorPreview() {
@@ -374,6 +391,9 @@ private fun DetailsScreenContentErrorPreview() {
         SharedTransitionLayout {
             AnimatedVisibility(visible = true) {
                 DetailsScreenContent(
+                    heroId = "1",
+                    heroName = "Batman",
+                    heroImageUrl = "",
                     uiState = DetailsUiState.Error("An decryption error occurred while fetching details."),
                     compareQuery = "",
                     dropdownResults = emptyList(),

@@ -2,8 +2,10 @@ package com.anenha.superhero.features.archive.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -45,7 +49,18 @@ fun HeroBanner(
                     .fillMaxSize()
                     .sharedElement(
                         sharedContentState = rememberSharedContentState(key = "hero_image_$heroId"),
-                        animatedVisibilityScope = animatedVisibilityScope
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = remember {
+                            BoundsTransform { _, _ ->
+                                spring(
+                                    dampingRatio = 0.8f,
+                                    stiffness = 380f
+                                )
+                            }
+                        },
+                        clipInOverlayDuringTransition = remember {
+                            OverlayClip(RectangleShape)
+                        }
                     )
             )
         }
