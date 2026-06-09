@@ -2,16 +2,22 @@ package com.anenha.superhero.features.archive.screen.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anenha.superhero.domain.model.SuperHero
 import com.anenha.superhero.domain.usecase.GetHeroDetailsUseCase
 import com.anenha.superhero.domain.usecase.SearchHeroesUseCase
-import com.anenha.superhero.domain.model.SuperHero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel(assistedFactory = DetailsViewModel.Factory::class)
@@ -62,7 +68,7 @@ class DetailsViewModel @AssistedInject constructor(
 
     private fun observeCompareQuery() {
         compareQuery
-            .debounce(300)
+            .debounce(300.milliseconds)
             .distinctUntilChanged()
             .onEach { query ->
                 if (query.trim().length >= 3) {

@@ -10,7 +10,6 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
@@ -22,11 +21,8 @@ import androidx.navigationevent.NavigationEventInput
 import androidx.navigationevent.setViewTreeNavigationEventDispatcherOwner
 import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 import com.anenha.superhero.features.archive.screen.archive.ArchiveScreen
-import com.anenha.superhero.features.archive.screen.archive.ArchiveViewModel
 import com.anenha.superhero.features.archive.screen.details.DetailsScreen
-import com.anenha.superhero.features.archive.screen.details.DetailsViewModel
 import com.anenha.superhero.features.comparison.screen.comparison.ComparisonScreen
-import com.anenha.superhero.features.comparison.screen.comparison.ComparisonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -104,25 +100,19 @@ fun AppNavigation() {
             entryProvider = { key ->
                 when (key) {
                     is ArchiveRoute -> NavEntry(key) {
-                        val archiveViewModel: ArchiveViewModel = hiltViewModel()
                         ArchiveScreen(
-                            viewModel = archiveViewModel,
-                            onHeroSelected = { id ->
-                                backStack.add(DetailsRoute(id))
+                            onHeroSelected = { id, name, imageUrl ->
+                                backStack.add(DetailsRoute(id = id, name = name, imageUrl = imageUrl))
                             },
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedVisibilityScope = LocalNavAnimatedContentScope.current
                         )
                     }
                     is DetailsRoute -> NavEntry(key) {
-                        val detailsViewModel: DetailsViewModel = hiltViewModel(
-                            key = key.id,
-                            creationCallback = { factory: DetailsViewModel.Factory ->
-                                factory.create(key.id)
-                            }
-                        )
                         DetailsScreen(
-                            viewModel = detailsViewModel,
+                            heroId = key.id,
+                            heroName = key.name,
+                            heroImageUrl = key.imageUrl,
                             onBackClick = {
                                 backStack.removeAt(backStack.size - 1)
                             },
@@ -134,14 +124,9 @@ fun AppNavigation() {
                         )
                     }
                     is ComparisonRoute -> NavEntry(key) {
-                        val comparisonViewModel: ComparisonViewModel = hiltViewModel(
-                            key = "${key.id1}_${key.id2}",
-                            creationCallback = { factory: ComparisonViewModel.Factory ->
-                                factory.create(key.id1, key.id2)
-                            }
-                        )
                         ComparisonScreen(
-                            viewModel = comparisonViewModel,
+                            hero1Id = key.id1,
+                            hero2Id = key.id2,
                             onBackClick = {
                                 backStack.removeAt(backStack.size - 1)
                             }

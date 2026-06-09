@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anenha.superhero.core.designsystem.component.VanguardCircularProgressIndicator
 import com.anenha.superhero.core.designsystem.component.VanguardSearchBar
 import com.anenha.superhero.core.designsystem.component.VanguardTopBar
@@ -44,17 +45,16 @@ import com.anenha.superhero.features.archive.R
 import com.anenha.superhero.features.archive.component.HeroCard
 import com.anenha.superhero.core.designsystem.R as DesignSystemR
 
-
 @Composable
 fun ArchiveScreen(
-    viewModel: ArchiveViewModel,
-    onHeroSelected: (String) -> Unit,
+    onHeroSelected: (String, String, String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
+    val viewModel: ArchiveViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
     ArchiveScreenContent(
         uiState = uiState,
@@ -74,7 +74,7 @@ fun ArchiveScreenContent(
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     onRetry: () -> Unit,
-    onHeroSelected: (String) -> Unit,
+    onHeroSelected: (String, String, String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -94,7 +94,7 @@ fun ArchiveScreenContent(
                 .padding(horizontal = 20.dp)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Decrypted base description
             Text(
                 text = stringResource(id = R.string.archive_subtitle),
@@ -114,13 +114,18 @@ fun ArchiveScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Content Grid
-            Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
                 when (uiState) {
                     is ArchiveUiState.Loading -> {
                         VanguardCircularProgressIndicator(
                             modifier = Modifier.align(Alignment.Center)
                         )
                     }
+
                     is ArchiveUiState.Success -> {
                         ArchiveSuccessContent(
                             heroes = uiState.heroes,
@@ -129,6 +134,7 @@ fun ArchiveScreenContent(
                             animatedVisibilityScope = animatedVisibilityScope
                         )
                     }
+
                     is ArchiveUiState.Error -> {
                         ArchiveErrorContent(
                             message = uiState.message,
@@ -144,7 +150,7 @@ fun ArchiveScreenContent(
 @Composable
 private fun ArchiveSuccessContent(
     heroes: List<SuperHero>,
-    onHeroSelected: (String) -> Unit,
+    onHeroSelected: (String, String, String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -171,7 +177,7 @@ private fun ArchiveSuccessContent(
             items(heroes, key = { it.id }) { hero ->
                 HeroCard(
                     hero = hero,
-                    onSelected = { onHeroSelected(hero.id) },
+                    onSelected = { onHeroSelected(hero.id, hero.name, hero.imageUrl) },
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
@@ -186,29 +192,28 @@ private fun ArchiveErrorContent(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.error,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = onRetry,
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
+                text = stringResource(id = DesignSystemR.string.retry),
+                style = MaterialTheme.typography.labelMedium
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onRetry,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = stringResource(id = DesignSystemR.string.retry),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 }
@@ -259,7 +264,7 @@ private fun ArchiveScreenContentLoadingPreview() {
                     searchQuery = "",
                     onSearchQueryChange = {},
                     onRetry = {},
-                    onHeroSelected = {},
+                    onHeroSelected = { _, _, _ -> },
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -279,7 +284,7 @@ private fun ArchiveScreenContentEmptyPreview() {
                     searchQuery = "",
                     onSearchQueryChange = {},
                     onRetry = {},
-                    onHeroSelected = {},
+                    onHeroSelected = { _, _, _ -> },
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -304,7 +309,7 @@ private fun ArchiveScreenContentSuccessPreview() {
                     searchQuery = "Search query",
                     onSearchQueryChange = {},
                     onRetry = {},
-                    onHeroSelected = {},
+                    onHeroSelected = { _, _, _ -> },
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -324,7 +329,7 @@ private fun ArchiveScreenContentErrorPreview() {
                     searchQuery = "",
                     onSearchQueryChange = {},
                     onRetry = {},
-                    onHeroSelected = {},
+                    onHeroSelected = { _, _, _ -> },
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )

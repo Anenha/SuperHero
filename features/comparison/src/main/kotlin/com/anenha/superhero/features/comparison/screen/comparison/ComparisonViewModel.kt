@@ -3,7 +3,6 @@ package com.anenha.superhero.features.comparison.screen.comparison
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anenha.superhero.domain.usecase.GetHeroDetailsUseCase
-import com.anenha.superhero.domain.model.SuperHero
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

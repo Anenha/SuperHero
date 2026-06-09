@@ -2,14 +2,20 @@ package com.anenha.superhero.features.archive.screen.archive
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anenha.superhero.domain.model.SuperHero
 import com.anenha.superhero.domain.usecase.GetRandomInitialHeroesUseCase
 import com.anenha.superhero.domain.usecase.SearchHeroesUseCase
-import com.anenha.superhero.domain.model.SuperHero
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -51,7 +57,7 @@ class ArchiveViewModel @Inject constructor(
 
     private fun observeSearchQuery() {
         searchQuery
-            .debounce(300)
+            .debounce(300.milliseconds)
             .distinctUntilChanged()
             .onEach { query ->
                 if (query.trim().length >= 3) {

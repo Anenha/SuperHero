@@ -10,7 +10,11 @@ sealed interface ScreenRoute : NavKey
 data object ArchiveRoute : ScreenRoute
 
 @Serializable
-data class DetailsRoute(val id: String) : ScreenRoute
+data class DetailsRoute(
+    val id: String,
+    val name: String? = null,
+    val imageUrl: String? = null
+) : ScreenRoute
 
 @Serializable
 data class ComparisonRoute(val id1: String, val id2: String) : ScreenRoute
