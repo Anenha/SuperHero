@@ -1,5 +1,9 @@
 package com.anenha.superhero.domain.model
 
+enum class HeroAlignment {
+    HERO, VILLAIN, NEUTRAL
+}
+
 data class SuperHero(
     val id: String,
     val name: String,
@@ -10,9 +14,10 @@ data class SuperHero(
     val connections: Connections,
     val imageUrl: String
 ) {
-    val isHero: Boolean
-        get() = biography.alignment.equals("good", ignoreCase = true)
-
-    val isVillain: Boolean
-        get() = biography.alignment.equals("bad", ignoreCase = true)
+    val alignment: HeroAlignment
+        get() = when {
+            biography.alignment.equals("good", ignoreCase = true) -> HeroAlignment.HERO
+            biography.alignment.equals("bad", ignoreCase = true) -> HeroAlignment.VILLAIN
+            else -> HeroAlignment.NEUTRAL
+        }
 }

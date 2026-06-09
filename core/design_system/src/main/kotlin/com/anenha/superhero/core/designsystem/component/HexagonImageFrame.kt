@@ -81,8 +81,6 @@ private fun HexagonImageFramePreview() {
         HexagonImageFrame(
             borderColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(100.dp)
-        ) {
-            // Placeholder content
-        }
+        ) {}
     }
 }

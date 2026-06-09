@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Strings -->
-    <string name="app_name">SuperHero Archive</string>
     <string name="back">Back</string>
 
     <!-- Tags (Shared) -->
     <string name="tag_hero">HERO</string>
     <string name="tag_villain">VILLAIN</string>
+    <string name="tag_neutral">NEUTRAL</string>
 
     <!-- Power Stats names (Shared) -->
     <string name="stat_strength">STRENGTH</string>

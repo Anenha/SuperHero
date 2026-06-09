@@ -22,8 +22,8 @@ fun VanguardButton(
     modifier: Modifier = Modifier,
     isEnable: Boolean = true,
     icon: ImageVector? = null,
-    color: Color = MaterialTheme.colorScheme.primary,
-    contentColor: Color = Color.White
+    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer
 ) {
     Button(
         enabled = isEnable,

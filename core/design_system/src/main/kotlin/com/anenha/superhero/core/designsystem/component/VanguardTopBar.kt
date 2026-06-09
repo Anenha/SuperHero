@@ -1,11 +1,25 @@
 package com.anenha.superhero.core.designsystem.component
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.anenha.superhero.core.designsystem.R
 import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
@@ -13,14 +27,17 @@ import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 @Composable
 fun VanguardTopBar(
     title: String,
-    onBackClick: (() -> Unit)? = null
+    onBackClick: (() -> Unit)? = null,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = MaterialTheme.colorScheme.primary,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets
 ) {
     TopAppBar(
         title = {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = contentColor
             )
         },
         navigationIcon = {
@@ -29,16 +46,67 @@ fun VanguardTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(id = R.string.back),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = contentColor
                     )
                 }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            titleContentColor = MaterialTheme.colorScheme.primary
-        )
+            containerColor = containerColor,
+            titleContentColor = contentColor,
+            navigationIconContentColor = contentColor
+        ),
+        windowInsets = windowInsets
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VanguardLargeTopBar(
+    title: String,
+    modifier: Modifier = Modifier,
+    onBackClick: (() -> Unit)? = null,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    containerColor: Color = Color.Transparent,
+    contentColor: Color = Color.White,
+    titleContentColor: Color = Color.White,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    expandedHeight: Dp = TopAppBarDefaults.LargeAppBarExpandedHeight,
+    background: @Composable BoxScope.() -> Unit = {}
+) {
+    Box {
+        background()
+        LargeTopAppBar(
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = titleContentColor,
+                    modifier = modifier
+                )
+            },
+            navigationIcon = {
+                if (onBackClick != null) {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back),
+                            tint = contentColor
+                        )
+                    }
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = containerColor,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = titleContentColor,
+                navigationIconContentColor = contentColor
+            ),
+            scrollBehavior = scrollBehavior,
+            windowInsets = windowInsets,
+            expandedHeight = expandedHeight
+        )
+    }
 }
 
 @Preview

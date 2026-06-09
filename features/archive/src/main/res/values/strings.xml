@@ -5,10 +5,6 @@
     <string name="archive_subtitle">Access the world\'s most comprehensive database of extraordinary individuals. Power metrics, and historical logs are now decrypted.</string>
     <string name="search_placeholder">Search by name</string>
     <string name="no_records_found">No records found</string>
-
-    <!-- Tags -->
-    <string name="tag_neutral">NEUTRAL</string>
-
     <!-- Details Screen -->
     <string name="details_title">HERO DETAILS</string>
     <string name="details_title_villain">VILLAIN DETAILS</string>
