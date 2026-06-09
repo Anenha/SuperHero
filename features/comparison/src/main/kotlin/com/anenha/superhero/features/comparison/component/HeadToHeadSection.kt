@@ -35,44 +35,46 @@ fun HeadToHeadSection(
     hero2: SuperHero,
     modifier: Modifier = Modifier
 ) {
-    VanguardCard(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         SectionHeader(
             text = stringResource(id = R.string.section_head_to_head),
             barColor = MaterialTheme.colorScheme.primary
         )
-        Spacer(modifier = Modifier.height(24.dp))
-
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_strength),
-            leftVal = hero1.powerstats.strength,
-            rightVal = hero2.powerstats.strength
-        )
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_intelligence),
-            leftVal = hero1.powerstats.intelligence,
-            rightVal = hero2.powerstats.intelligence
-        )
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_speed),
-            leftVal = hero1.powerstats.speed,
-            rightVal = hero2.powerstats.speed
-        )
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_durability),
-            leftVal = hero1.powerstats.durability,
-            rightVal = hero2.powerstats.durability
-        )
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_power),
-            leftVal = hero1.powerstats.power,
-            rightVal = hero2.powerstats.power
-        )
-        CompareStatRow(
-            label = stringResource(id = DesignSystemR.string.stat_combat),
-            leftVal = hero1.powerstats.combat,
-            rightVal = hero2.powerstats.combat
-        )
+        Spacer(modifier = Modifier.height(16.dp))
+        VanguardCard {
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_strength),
+                leftVal = hero1.powerstats.strength,
+                rightVal = hero2.powerstats.strength
+            )
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_intelligence),
+                leftVal = hero1.powerstats.intelligence,
+                rightVal = hero2.powerstats.intelligence
+            )
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_speed),
+                leftVal = hero1.powerstats.speed,
+                rightVal = hero2.powerstats.speed
+            )
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_durability),
+                leftVal = hero1.powerstats.durability,
+                rightVal = hero2.powerstats.durability
+            )
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_power),
+                leftVal = hero1.powerstats.power,
+                rightVal = hero2.powerstats.power
+            )
+            CompareStatRow(
+                label = stringResource(id = DesignSystemR.string.stat_combat),
+                leftVal = hero1.powerstats.combat,
+                rightVal = hero2.powerstats.combat
+            )
+        }
     }
+
 }
 
 @Composable
