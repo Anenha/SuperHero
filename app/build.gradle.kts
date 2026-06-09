@@ -11,26 +11,25 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:network"))
     implementation(project(":core:design_system"))
+    implementation(project(":core:network"))
     implementation(project(":domain"))
     implementation(project(":features:archive"))
     implementation(project(":features:comparison"))
     
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigationevent)
     implementation(libs.androidx.navigationevent.compose)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.core.ktx)
     implementation(libs.coil.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.hilt.navigation.compose)
     
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
