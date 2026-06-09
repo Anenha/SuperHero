@@ -96,6 +96,7 @@ fun DetailsScreen(
             val state = uiState
             if (state is DetailsUiState.Success) {
                 onCompareClick(state.hero.id, targetId)
+                viewModel.clearDropdown()
             }
         },
         onRetry = viewModel::loadHeroDetails,
