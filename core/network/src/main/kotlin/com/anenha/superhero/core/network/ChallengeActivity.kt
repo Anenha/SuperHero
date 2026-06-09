@@ -44,6 +44,7 @@ class ChallengeActivity : ComponentActivity() {
                 val cookies = CookieManager.getInstance().getCookie(url)
                 Log.d("ChallengeActivity", "Page finished: $url, Cookies: $cookies")
                 if (cookies?.contains("cf_clearance") == true) {
+                    Log.d("ChallengeActivity", "Success! Found cf_clearance cookie.")
                     CloudflareInterceptor.clearanceCookie = cookies
                     CloudflareInterceptor.latch.get()?.countDown()
                     finish()
@@ -51,13 +52,26 @@ class ChallengeActivity : ComponentActivity() {
             }
         }
 
-        Log.d("ChallengeActivity", "Loading challenge URL: $url")
-        webView.loadUrl(url)
+        if (savedInstanceState == null) {
+            // Clear cookies to ensure we don't pick up an expired one from previous sessions
+            Log.d("ChallengeActivity", "First launch, clearing cookies before loading challenge...")
+            CookieManager.getInstance().removeAllCookies {
+                Log.d("ChallengeActivity", "Cookies cleared, loading URL: $url")
+                webView.loadUrl(url)
+            }
+        } else {
+            Log.d("ChallengeActivity", "Re-created instance, loading URL without clearing: $url")
+            webView.loadUrl(url)
+        }
     }
 
     override fun onDestroy() {
         // Ensure latch is released if user closes the activity without solving
-        CloudflareInterceptor.latch.get()?.countDown()
+        // We only count down if the activity is actually finishing, not during config changes like rotation
+        if (isFinishing) {
+            Log.d("ChallengeActivity", "Activity finishing, releasing latch if still present")
+            CloudflareInterceptor.latch.get()?.countDown()
+        }
         super.onDestroy()
     }
 }

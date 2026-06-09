@@ -43,16 +43,18 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
             } }
             .build()
 
-        var response = chain.proceed(buildRequest(clearanceCookie))
+        val attemptedCookie = clearanceCookie
+        val response = chain.proceed(buildRequest(attemptedCookie))
 
         if (response.code == 403 && (response.header("cf-mitigated") == "challenge" || response.header("server") == "cloudflare")) {
             Log.d("CloudflareInterceptor", "Detected Cloudflare challenge for ${originalRequest.url}")
-            response.close()
 
             synchronized(lock) {
-                if (clearanceCookie == null) {
+                // If the cookie is still the same as when we started, it's either null or expired
+                if (clearanceCookie == attemptedCookie) {
                     if (latch.get() == null) {
-                        Log.d("CloudflareInterceptor", "Starting ChallengeActivity...")
+                        Log.d("CloudflareInterceptor", "Cookie expired or missing. Starting ChallengeActivity...")
+                        clearanceCookie = null // Force clear it to get a fresh one
                         latch.set(CountDownLatch(1))
                         val intent = Intent(context, ChallengeActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -65,17 +67,20 @@ class CloudflareInterceptor(private val context: Context) : Interceptor {
             }
 
             // Wait up to 1 minute for the user to solve the challenge
-            Log.d("CloudflareInterceptor", "Waiting for challenge to be solved...")
-            latch.get()?.await(1, TimeUnit.MINUTES)
+            val currentLatch = latch.get()
+            if (currentLatch != null) {
+                Log.d("CloudflareInterceptor", "Waiting for challenge to be solved...")
+                currentLatch.await(1, TimeUnit.MINUTES)
+            }
 
-            if (clearanceCookie != null) {
-                Log.d("CloudflareInterceptor", "Retrying request with solved cookie")
-                // Reset latch for future challenges if needed (though usually session lasts)
-                latch.set(null)
+            if (clearanceCookie != null && clearanceCookie != attemptedCookie) {
+                Log.d("CloudflareInterceptor", "Retrying request with new cookie: $clearanceCookie")
+                latch.compareAndSet(currentLatch, null)
+                response.close() // Close the challenge response before retrying
                 return chain.proceed(buildRequest(clearanceCookie))
             } else {
-                Log.e("CloudflareInterceptor", "Failed to solve challenge (timeout or closed)")
-                latch.set(null)
+                Log.e("CloudflareInterceptor", "Failed to solve challenge. Cookie is ${if (clearanceCookie == null) "null" else "identical to old one"}")
+                latch.compareAndSet(currentLatch, null)
             }
         }
 
