@@ -1,10 +1,10 @@
-# SuperHero Archive
-
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-blue?style=for-the-badge)](https://img.shields.io/badge/Architecture-Clean%20Architecture-blue?style=for-the-badge)
 [![Jetpack Compose](https://img.shields.io/badge/UI-Jetpack%20Compose-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://img.shields.io/badge/UI-Jetpack%20Compose-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 [![Retrofit](https://img.shields.io/badge/Networking-Retrofit-red?style=for-the-badge)](https://img.shields.io/badge/Networking-Retrofit-red?style=for-the-badge)
 [![Hilt](https://img.shields.io/badge/DI-Hilt-orange?style=for-the-badge)](https://img.shields.io/badge/DI-Hilt-orange?style=for-the-badge)
 [![Kotlin](https://img.shields.io/badge/Language-Kotlin-purple?style=for-the-badge&logo=kotlin)](https://img.shields.io/badge/Language-Kotlin-purple?style=for-the-badge&logo=kotlin)
+
+# <img align="left" src="core/design_system/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" width="50" height="50" alt="SuperHero Archive Logo" />SuperHero Archive<br clear="left" />
 
 A modern Android application that catalogs, details, and compares superheroes from the Superhero API. Built using modern Android development practices, **Clean Architecture**, and Jetpack Compose.
 
