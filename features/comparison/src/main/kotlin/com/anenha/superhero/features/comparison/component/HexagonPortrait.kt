@@ -23,6 +23,7 @@ import com.anenha.superhero.domain.model.Appearance
 import com.anenha.superhero.domain.model.Biography
 import com.anenha.superhero.domain.model.Connections
 import com.anenha.superhero.domain.model.PowerStats
+import com.anenha.superhero.domain.model.HeroAlignment
 import com.anenha.superhero.domain.model.SuperHero
 import com.anenha.superhero.domain.model.Work
 import com.anenha.superhero.core.designsystem.R as DesignSystemR
@@ -39,7 +40,11 @@ fun HexagonPortrait(
     ) {
         Text(
             text = stringResource(
-                id = if (hero.isVillain) DesignSystemR.string.tag_villain else DesignSystemR.string.tag_hero
+                id = when (hero.alignment) {
+                    HeroAlignment.HERO -> DesignSystemR.string.tag_hero
+                    HeroAlignment.VILLAIN -> DesignSystemR.string.tag_villain
+                    HeroAlignment.NEUTRAL -> DesignSystemR.string.tag_neutral
+                }
             ),
             style = MaterialTheme.typography.labelSmall,
             color = borderColor
