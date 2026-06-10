@@ -1,10 +1,15 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.anenha.superhero.core.designsystem.component
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,7 +22,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.anenha.superhero.core.designsystem.R
@@ -44,7 +51,7 @@ fun VanguardTopBar(
             if (onBackClick != null) {
                 IconButton(onClick = onBackClick) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
                         contentDescription = stringResource(id = R.string.back),
                         tint = contentColor
                     )
@@ -72,6 +79,9 @@ fun VanguardLargeTopBar(
     titleContentColor: Color = Color.White,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     expandedHeight: Dp = TopAppBarDefaults.LargeAppBarExpandedHeight,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
+    titleAlpha: Float = 1f,
     background: @Composable BoxScope.() -> Unit = {}
 ) {
     Box {
@@ -79,20 +89,33 @@ fun VanguardLargeTopBar(
         LargeTopAppBar(
             title = {
                 Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = titleContentColor,
+                    text = title.uppercase(),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = titleContentColor.copy(alpha = titleAlpha),
                     modifier = modifier
                 )
             },
             navigationIcon = {
                 if (onBackClick != null) {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back),
-                            tint = contentColor
-                        )
+                    val iconModifier = if (animatedVisibilityScope != null) {
+                        with(animatedVisibilityScope) {
+                            Modifier.animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            )
+                        }
+                    } else {
+                        Modifier
+                    }
+
+                    Box(modifier = iconModifier) {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_back),
+                                contentDescription = stringResource(id = R.string.back),
+                                tint = contentColor
+                            )
+                        }
                     }
                 }
             },
@@ -104,7 +127,14 @@ fun VanguardLargeTopBar(
             ),
             scrollBehavior = scrollBehavior,
             windowInsets = windowInsets,
-            expandedHeight = expandedHeight
+            expandedHeight = expandedHeight,
+            modifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+                with(sharedTransitionScope) {
+                    Modifier.renderInSharedTransitionScopeOverlay()
+                }
+            } else {
+                Modifier
+            }
         )
     }
 }
@@ -114,5 +144,18 @@ fun VanguardLargeTopBar(
 private fun VanguardTopBarPreview() {
     VanguardKineticTheme {
         VanguardTopBar(title = "ARCHIVE", onBackClick = {})
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun VanguardLargeTopBarPreview() {
+    VanguardKineticTheme {
+        VanguardLargeTopBar(
+            title = "BATMAN",
+            onBackClick = {},
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     }
 }

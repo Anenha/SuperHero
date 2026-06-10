@@ -23,6 +23,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -56,12 +59,18 @@ fun ArchiveScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
 
+    var tappedHeroId by rememberSaveable { mutableStateOf<String?>(null) }
+
     ArchiveScreenContent(
         uiState = uiState,
         searchQuery = searchQuery,
         onSearchQueryChange = viewModel::onSearchQueryChanged,
         onRetry = viewModel::loadInitialHeroes,
-        onHeroSelected = onHeroSelected,
+        onHeroSelected = { id, name, imageUrl ->
+            tappedHeroId = id
+            onHeroSelected(id, name, imageUrl)
+        },
+        tappedHeroId = tappedHeroId,
         sharedTransitionScope = sharedTransitionScope,
         animatedVisibilityScope = animatedVisibilityScope,
         modifier = modifier
@@ -75,6 +84,7 @@ fun ArchiveScreenContent(
     onSearchQueryChange: (String) -> Unit,
     onRetry: () -> Unit,
     onHeroSelected: (String, String, String) -> Unit,
+    tappedHeroId: String?,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -131,7 +141,8 @@ fun ArchiveScreenContent(
                             heroes = uiState.heroes,
                             onHeroSelected = onHeroSelected,
                             sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            tappedHeroId = tappedHeroId
                         )
                     }
 
@@ -153,6 +164,7 @@ private fun ArchiveSuccessContent(
     onHeroSelected: (String, String, String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
+    tappedHeroId: String?,
     modifier: Modifier = Modifier
 ) {
     if (heroes.isEmpty()) {
@@ -179,7 +191,8 @@ private fun ArchiveSuccessContent(
                     hero = hero,
                     onSelected = { onHeroSelected(hero.id, hero.name, hero.imageUrl) },
                     sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    renderInOverlay = hero.id == tappedHeroId
                 )
             }
         }
@@ -265,6 +278,7 @@ private fun ArchiveScreenContentLoadingPreview() {
                     onSearchQueryChange = {},
                     onRetry = {},
                     onHeroSelected = { _, _, _ -> },
+                    tappedHeroId = null,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -285,6 +299,7 @@ private fun ArchiveScreenContentEmptyPreview() {
                     onSearchQueryChange = {},
                     onRetry = {},
                     onHeroSelected = { _, _, _ -> },
+                    tappedHeroId = null,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -310,6 +325,7 @@ private fun ArchiveScreenContentSuccessPreview() {
                     onSearchQueryChange = {},
                     onRetry = {},
                     onHeroSelected = { _, _, _ -> },
+                    tappedHeroId = null,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )
@@ -330,6 +346,7 @@ private fun ArchiveScreenContentErrorPreview() {
                     onSearchQueryChange = {},
                     onRetry = {},
                     onHeroSelected = { _, _, _ -> },
+                    tappedHeroId = null,
                     sharedTransitionScope = this@SharedTransitionLayout,
                     animatedVisibilityScope = this@AnimatedVisibility
                 )

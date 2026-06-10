@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.anenha.superhero.features.archive.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.BoundsTransform
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.spring
@@ -16,11 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -35,7 +37,7 @@ fun HeroBanner(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
-    showName: Boolean = true
+    nameAlpha: Float = 1f
 ) {
     Box(
         modifier = modifier.fillMaxWidth()
@@ -47,7 +49,7 @@ fun HeroBanner(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .sharedElement(
+                    .sharedBounds(
                         sharedContentState = rememberSharedContentState(key = "hero_image_$heroId"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         boundsTransform = remember {
@@ -70,6 +72,11 @@ fun HeroBanner(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
+                .then(
+                    with(sharedTransitionScope) {
+                        Modifier.renderInSharedTransitionScopeOverlay()
+                    }
+                )
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
@@ -80,10 +87,28 @@ fun HeroBanner(
                 )
         )
 
-        // Dark Gradient
+        // Bottom shadow/gradient for name readability
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .then(
+                    with(sharedTransitionScope) {
+                        Modifier
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "hero_bottom_gradient_$heroId"),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                boundsTransform = remember {
+                                    BoundsTransform { _, _ ->
+                                        spring(
+                                            dampingRatio = 0.8f,
+                                            stiffness = 380f
+                                        )
+                                    }
+                                },
+                                resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
+                            )
+                    }
+                )
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
@@ -95,15 +120,29 @@ fun HeroBanner(
                 )
         )
 
-        // Name
-        if (showName) {
+        // Hero Name in Banner
+        with(sharedTransitionScope) {
             Text(
-                text = heroName,
+                text = heroName.uppercase(),
                 style = MaterialTheme.typography.headlineLarge,
-                color = Color.White,
+                color = Color.White.copy(alpha = nameAlpha),
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(20.dp)
+                    .align(androidx.compose.ui.Alignment.BottomStart)
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "hero_name_$heroId"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = remember {
+                            BoundsTransform { _, _ ->
+                                spring(
+                                    dampingRatio = 0.8f,
+                                    stiffness = 380f
+                                )
+                            }
+                        },
+                        resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
+                    )
+                    .skipToLookaheadSize()
             )
         }
     }

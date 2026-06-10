@@ -1,11 +1,16 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.anenha.superhero.features.archive.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.BoundsTransform
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -45,9 +50,14 @@ fun HeroCard(
     onSelected: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    renderInOverlay: Boolean = true
 ) {
     val cardShape = MaterialTheme.shapes.extraLarge
+    val heroImageState = with(sharedTransitionScope) {
+        rememberSharedContentState(key = "hero_image_${hero.id}")
+    }
+
     Card(
         shape = cardShape,
         modifier = modifier
@@ -57,7 +67,6 @@ fun HeroCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Character Portrait image
             with(sharedTransitionScope) {
                 AsyncImage(
                     model = hero.imageUrl,
@@ -65,8 +74,9 @@ fun HeroCard(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
-                        .sharedElement(
-                            sharedContentState = rememberSharedContentState(key = "hero_image_${hero.id}"),
+                        .clip(cardShape)
+                        .sharedBounds(
+                            sharedContentState = heroImageState,
                             animatedVisibilityScope = animatedVisibilityScope,
                             boundsTransform = remember {
                                 BoundsTransform { _, _ ->
@@ -84,19 +94,34 @@ fun HeroCard(
             }
 
             // Dark gradient overlay at the bottom for text readability
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f)
-                            ),
-                            startY = 350f
+            with(sharedTransitionScope) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "hero_bottom_gradient_${hero.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = remember {
+                                BoundsTransform { _, _ ->
+                                    spring(
+                                        dampingRatio = 0.8f,
+                                        stiffness = 380f
+                                    )
+                                }
+                            },
+                            resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
                         )
-                    )
-            )
+                        .background(
+                            Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.9f)
+                                ),
+                                startY = 350f
+                            )
+                        )
+                )
+            }
 
             // Top-right alignment tag
             val tagInfo = when (hero.alignment) {
@@ -123,6 +148,21 @@ fun HeroCard(
             Box(
                 modifier = Modifier
                     .padding(12.dp)
+                    .then(
+                        with(sharedTransitionScope) {
+                            Modifier.renderInSharedTransitionScopeOverlay(
+                                renderInOverlay = { renderInOverlay }
+                            )
+                        }
+                    )
+                    .then(
+                        with(animatedVisibilityScope) {
+                            Modifier.animateEnterExit(
+                                enter = fadeIn(),
+                                exit = fadeOut()
+                            )
+                        }
+                    )
                     .clip(MaterialTheme.shapes.extraLarge)
                     .background(containerColor)
                     .padding(horizontal = 8.dp, vertical = 4.dp)

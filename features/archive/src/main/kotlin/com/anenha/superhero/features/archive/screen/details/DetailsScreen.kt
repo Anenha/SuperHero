@@ -4,10 +4,8 @@ package com.anenha.superhero.features.archive.screen.details
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +28,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -130,29 +127,20 @@ fun DetailsScreenContent(
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val collapsedFraction = scrollBehavior.state.collapsedFraction
+
     Scaffold(
         topBar = {
             VanguardLargeTopBar(
-                title = displayName,
+                title = displayName.uppercase(),
                 onBackClick = onBackClick,
                 scrollBehavior = scrollBehavior,
                 expandedHeight = 380.dp,
                 windowInsets = WindowInsets.statusBars,
-                modifier = with(sharedTransitionScope) {
-                    Modifier.sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "hero_name_${heroId}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = remember {
-                            BoundsTransform { _, _ ->
-                                spring(
-                                    dampingRatio = 0.8f,
-                                    stiffness = 380f
-                                )
-                            }
-                        },
-                        resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
-                    )
-                },
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope,
+                titleAlpha = collapsedFraction.coerceIn(0f, 1f),
+                modifier = Modifier,
                 background = {
                     HeroBanner(
                         heroId = heroId,
@@ -160,11 +148,11 @@ fun DetailsScreenContent(
                         imageUrl = displayImageUrl,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
-                        showName = false,
+                        nameAlpha = (1f - collapsedFraction).coerceIn(0f, 1f),
                         modifier = Modifier
                             .matchParentSize()
                             .graphicsLayer {
-                                alpha = 1f - scrollBehavior.state.collapsedFraction
+                                alpha = 1f - collapsedFraction
                             }
                     )
                 }
