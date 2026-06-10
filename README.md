@@ -61,7 +61,6 @@ graph TD
     feat_compare --> ds
 
     net --> dom
-    ds --> dom
 ```
 
 ### Dependency Rules

@@ -12,7 +12,6 @@ android {
 
 dependencies {
     implementation(project(":core:design_system"))
-    implementation(project(":core:network"))
     implementation(project(":domain"))
 
     implementation(libs.androidx.lifecycle.viewmodel.compose)
