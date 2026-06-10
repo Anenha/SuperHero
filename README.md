@@ -54,12 +54,14 @@ graph TD
     app --> feat_compare
     app --> net
     app --> dom
-
-    feat_archive --> dom
+    
     feat_archive --> ds
-    feat_compare --> dom
     feat_compare --> ds
 
+    feat_archive --> dom
+    feat_compare --> dom
+
+   
     net --> dom
 ```
 
