@@ -15,7 +15,6 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":domain"))
 
-    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation3.runtime)

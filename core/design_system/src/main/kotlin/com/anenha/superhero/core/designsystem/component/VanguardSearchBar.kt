@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,9 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anenha.superhero.core.designsystem.R
 import com.anenha.superhero.core.designsystem.theme.VanguardKineticTheme
 
 @Composable
@@ -42,11 +42,12 @@ fun VanguardSearchBar(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    leadingIcon: ImageVector = Icons.Default.Search,
+    leadingIcon: ImageVector? = null,
     glowColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
+    val actualLeadingIcon = leadingIcon ?: ImageVector.vectorResource(id = R.drawable.ic_search)
 
     val animatedBorderColor by animateColorAsState(
         targetValue = if (isFocused) glowColor else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
@@ -82,7 +83,7 @@ fun VanguardSearchBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = leadingIcon,
+                    imageVector = actualLeadingIcon,
                     contentDescription = null,
                     tint = if (isFocused) glowColor else MaterialTheme.colorScheme.onSurfaceVariant
                 )
