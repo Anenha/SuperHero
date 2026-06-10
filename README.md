@@ -10,7 +10,7 @@ A modern Android application that catalogs, details, and compares superheroes fr
 
 ## 📱 App Demo
 
-[super-hero-app.webm](https://github.com/user-attachments/assets/7783732a-df08-4624-a9d4-2d99f73280ea)
+[super-hero-app-demo.webm](https://github.com/user-attachments/assets/fa0c3fee-0eed-4277-8713-15b2b6cf3baf)
 
 ---
 
@@ -60,7 +60,6 @@ graph TD
 
     feat_archive --> dom
     feat_compare --> dom
-
    
     net --> dom
 ```
